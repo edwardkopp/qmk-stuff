@@ -1,4 +1,8 @@
 {
+    "planck": {
+        "kb": "planck/rev6_drop",
+        "km": "edwardkopp"
+    },
     "preonic": {
         "kb": "preonic/rev3_drop",
         "km": "edwardkopp"
