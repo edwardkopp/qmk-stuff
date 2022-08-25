@@ -44,12 +44,8 @@ class Keyboards:
     _QMK_PATH = join(Path.home(), _QMK_DIR, _QMK_KEYBOARDS_DIR)
 
     def __init__(self):
-        self._data: dict | None = None
-        self._read_json()
         if not isdir(self._QMK_PATH):
             raise NotADirectoryError("QMK firmware directory is missing.")
-
-    def _read_json(self) -> None:
         with open(self._JSON_PATH, "r") as file:
             self._data = load(file)
 
@@ -93,6 +89,12 @@ class Keyboards:
         copytree(source_dir, destination_dir)
 
     def compile_command(self, label: str) -> str:
+        """
+        Get compile command for a registered keymap.
+
+        :param label: label of registered keymap to get command for
+        :return: string for QMK compile command
+        """
         return "qmk compile -kb {} -km {}".format(*self._json_data(label))
 
     def _label_check(self, label: str) -> str:
@@ -128,10 +130,10 @@ class Keyboards:
 
     def _json_data(self, label: str) -> tuple[str, str]:
 
-        def _from_name(key: str) -> str:
+        def _from_label(key: str) -> str:
             return self._data[label][key]
 
-        return _from_name(self._Json.KEYBOARD_KEY), _from_name(self._Json.KEYMAP_KEY)
+        return _from_label(self._Json.KEYBOARD_KEY), _from_label(self._Json.KEYMAP_KEY)
 
 
 class Cli:
