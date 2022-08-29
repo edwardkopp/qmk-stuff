@@ -33,7 +33,7 @@ directories will eventually hold the keymap files.
 
 The keys `kb` and `km` associated with each label should match the `kb`
 and `km` arguments for compiling the desired keymap with `qmk compile`
-in [QMK CLI](https://github.com/qmk/qmk_cli)/
+in [QMK CLI](https://github.com/qmk/qmk_cli) /
 [MSYS](https://github.com/qmk/qmk_distro_msys).
 Below is an example keymap, labeled `preonic`, corresponding
 with the command `qmk compile -kb preonic/rev3_drop -km edwardkopp`:
