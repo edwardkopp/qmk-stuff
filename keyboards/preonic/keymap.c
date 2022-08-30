@@ -54,8 +54,6 @@ const key_override_t kc_mute_override = ko_make_with_layers_and_negmods(
 
 // define all key overrides
 const key_override_t **key_overrides = (const key_override_t *[]) {
-    &gui_off_override,
-    &nk_off_override,
     &kc_volu_override,
     &kc_vold_override,
     &kc_mute_override,
