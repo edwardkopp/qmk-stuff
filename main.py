@@ -24,34 +24,46 @@ from pathlib import Path
 from json import load
 
 
-class Keyboards:
+class KeyboardsJson:
 
-    class _Json:
-
-        KEYBOARD_KEY = "kb"
-        KEYMAP_KEY = "km"
-
-    _KEYMAP_DIR = "keymaps"
     _DIR = "keyboards"
-    _JSON_PATH = join(_DIR, "keyboards.json")
-    _QMK_DIR = "qmk_firmware"
-    _QMK_KEYBOARDS_DIR = "keyboards"
-    _QMK_PATH = join(Path.home(), _QMK_DIR, _QMK_KEYBOARDS_DIR)
+
+    _PATH = join(_DIR, "keyboards.json")
+    _KEYBOARD_KEY = "kb"
+    _KEYMAP_KEY = "km"
 
     def __init__(self):
-        if not isdir(self._QMK_PATH):
-            raise NotADirectoryError("QMK firmware directory is missing.")
-        with open(self._JSON_PATH, "r") as file:
+        with open(self._PATH, "r") as file:
             self._data = load(file)
 
     @property
-    def list(self) -> list:
+    def list(self) -> list[str]:
         """
         Property for list of registered keymaps
 
         :return: list of registered keymap labels
         """
         return list(self._data.keys())
+
+    def get_keyboard(self, label: str) -> str:
+        return self._data[label][self._KEYBOARD_KEY]
+
+    def get_keymap(self, label: str) -> str:
+        return self._data[label][self._KEYMAP_KEY]
+
+
+class Keyboards(KeyboardsJson):
+
+    _DERIVATIVE_JSON = "derivative.json"
+    _QMK_KEYBOARD_DIR = "keyboards"
+    _QMK_KEYMAP_DIR = "keymaps"
+    _QMK_DIR = "qmk_firmware"
+    _QMK_PATH = join(Path.home(), _QMK_DIR, _QMK_KEYBOARD_DIR)
+
+    def __init__(self):
+        if not isdir(self._QMK_PATH):
+            raise NotADirectoryError("QMK firmware directory is missing.")
+        KeyboardsJson.__init__(self)
 
     def deploy_keymap(self, label: str) -> None:
         """
@@ -64,7 +76,7 @@ class Keyboards:
         """
         label = self._label_check(label)
         source_dir = join(self._DIR, label)
-        destination_dir = self._locate_keymap_dir(label, check_keymap=False)
+        destination_dir = self._locate_qmk_keymap_dir(label, check_keymap=False)
         rmtree(destination_dir, True)
         copytree(source_dir, destination_dir)
 
@@ -78,7 +90,7 @@ class Keyboards:
         :raise NotADirectoryError: if keymap is not found in the QMK directory
         """
         label = self._label_check(label)
-        source_dir = self._locate_keymap_dir(label, check_keymap=True)
+        source_dir = self._locate_qmk_keymap_dir(label, check_keymap=True)
         destination_dir = join(self._DIR, label)
         rmtree(destination_dir, True)
         copytree(source_dir, destination_dir)
@@ -90,7 +102,10 @@ class Keyboards:
         :param label: label of registered keymap to get command for
         :return: string for QMK compile command
         """
-        return "qmk compile -kb {} -km {}".format(*self._json_data(label))
+        return "qmk compile -kb {kb} -km {km}".format(
+            kb=self.get_keyboard(label),
+            km=self.get_keymap(label)
+        )
 
     def _label_check(self, label: str) -> str:
         label = label.lower()
@@ -98,7 +113,7 @@ class Keyboards:
             raise KeyError("Keymap with given label does not exist.")
         return label
 
-    def _locate_keymap_dir(self, label: str, check_keymap: bool) -> str:
+    def _locate_qmk_keymap_dir(self, label: str, check_keymap: bool) -> str:
         """
         Confirm presence of keymap directories within QMK directory
         and return full path of keymap registered under given name.
@@ -108,8 +123,9 @@ class Keyboards:
         :return: path to QMK keymap directory
         :raise NotADirectoryError: if keymap directory check fails
         """
-        keyboard, keymap = self._json_data(label)
-        path_list_extension = [self._KEYMAP_DIR]
+        keyboard = self.get_keyboard(label)
+        keymap = self.get_keymap(label)
+        path_list_extension = [self._QMK_KEYMAP_DIR]
         minimum_path_len = 2
         if check_keymap:
             minimum_path_len = 3
@@ -122,13 +138,6 @@ class Keyboards:
                 return join(self._QMK_PATH, *keymap_path_list)
             keymap_path_list.pop(0-minimum_path_len)
         raise NotADirectoryError("Cannot find keymap directory.")
-
-    def _json_data(self, label: str) -> tuple[str, str]:
-
-        def _from_label(key: str) -> str:
-            return self._data[label][key]
-
-        return _from_label(self._Json.KEYBOARD_KEY), _from_label(self._Json.KEYMAP_KEY)
 
 
 class Cli:
