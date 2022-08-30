@@ -135,19 +135,16 @@ class Cli:
 
     def __init__(self):
         self._loop_active = True
-        self._do_not_run = False
         try:
             self._internal = Keyboards()
         except NotADirectoryError:
-            self._do_not_run = True
-
-    def run(self) -> None:
-        if self._do_not_run:
             print("QMK firmware directory is missing from the user's home directory.")
             print("Use QMK MSYS/CLI to run the \"qmk setup\" command before running this program.")
             print()
             input("Press enter to exit the program... ")
-            return
+            raise
+
+    def run(self) -> None:
         print("Use the \"help\" command for a list of available commands.")
         while self._loop_active:
             self._command()
@@ -211,5 +208,9 @@ class Cli:
 
 
 if __name__ == "__main__":
-    app = Cli()
-    app.run()
+    try:
+        app = Cli()
+    except NotADirectoryError:
+        pass
+    else:
+        app.run()
