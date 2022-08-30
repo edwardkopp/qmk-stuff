@@ -31,11 +31,6 @@ class Keyboards:
         KEYBOARD_KEY = "kb"
         KEYMAP_KEY = "km"
 
-    class _LabelLen:
-
-        MIN = 5
-        MAX = 20
-
     _KEYMAP_DIR = "keymaps"
     _DIR = "keyboards"
     _JSON_PATH = join(_DIR, "keyboards.json")
