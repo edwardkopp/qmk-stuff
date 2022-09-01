@@ -45,11 +45,15 @@ class KeyboardsJson:
         """
         return list(self._data.keys())
 
-    def get_keyboard(self, label: str) -> str:
-        return self._data[label][self._KEYBOARD_KEY]
+    def get_data(self, label: str) -> tuple[str, str]:
+        """
+        Get tuple of two string values for the keys kb and km associated with the given label,
+        indexed respectively.
 
-    def get_keymap(self, label: str) -> str:
-        return self._data[label][self._KEYMAP_KEY]
+        :param label: registered keymap label to get data for
+        :return: tuple of strings
+        """
+        return self._data[label][self._KEYBOARD_KEY], self._data[label][self._KEYMAP_KEY]
 
 
 class Keyboards(KeyboardsJson):
@@ -102,10 +106,7 @@ class Keyboards(KeyboardsJson):
         :param label: label of registered keymap to get command for
         :return: string for QMK compile command
         """
-        return "qmk compile -kb {kb} -km {km}".format(
-            kb=self.get_keyboard(label),
-            km=self.get_keymap(label)
-        )
+        return "qmk compile -kb {} -km {}".format(*self.get_data(label))
 
     def _label_check(self, label: str) -> str:
         label = label.lower()
@@ -123,8 +124,7 @@ class Keyboards(KeyboardsJson):
         :return: path to QMK keymap directory
         :raise NotADirectoryError: if keymap directory check fails
         """
-        keyboard = self.get_keyboard(label)
-        keymap = self.get_keymap(label)
+        keyboard, keymap = self.get_data(label)
         path_list_extension = [self._QMK_KEYMAP_DIR]
         minimum_path_len = 2
         if check_keymap:
