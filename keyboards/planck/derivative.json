@@ -1,8 +1,0 @@
-{
-    "source": "preonic",
-    "delete_line": {
-        "keymap.c": [
-            66, 73, 80, 87
-        ]
-    }
-}
