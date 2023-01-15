@@ -17,21 +17,26 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 
+// keyboard layers
 enum rainbow_layer_cake {
-    CRINGE,
-    BASED,
-    SYMBOL,
-    FUNCTION,
-    RAT
+    _QWERTY,
+    _DMH,
+    _GAMING,
+    _SYMBOL,
+    _NAVI,
+    _RAT
 };
 
-#define EK_LEFT MO(SYMBOL)
-#define EK_RGHT MO(FUNCTION)
-#define EK_CRY DF(CRINGE)
-#define EK_YES DF(BASED)
+// layer keys
+#define EK_SYMB MO(_SYMBOL)
+#define EK_NAVI MO(_NAVI)
+#define EK_GAME TO(_GAMING)
+#define EK_HOME TO(0)
+#define EK_SMH DF(_QWERTY)
+#define EK_DMH DF(_DMH)
 
-// make SHIFT+KC_MPLY output KC_MUTE
-const key_override_t kc_mute_override = ko_make_with_layers_and_negmods(
+// KC_MPLY to KC_MUTE
+const key_override_t play_mute = ko_make_with_layers_and_negmods(
     MOD_MASK_SHIFT,
     KC_MPLY,
     KC_MUTE,
@@ -39,71 +44,78 @@ const key_override_t kc_mute_override = ko_make_with_layers_and_negmods(
     MOD_MASK_CAG
 );
 
-// make SHIFT+KC_MPRV output KC_VOLD
-const key_override_t kc_vold_override = ko_make_with_layers_and_negmods(
+// KC_MNXT to KC_VOLU
+const key_override_t next_vold = ko_make_with_layers_and_negmods(
     MOD_MASK_SHIFT,
-    KC_MPRV,
+    KC_MNXT,
     KC_VOLD,
     ~0,
     MOD_MASK_CAG
 );
 
-// make SHIFT+KC_MNXT output KC_VOLU
-const key_override_t kc_volu_override = ko_make_with_layers_and_negmods(
+// KC_MPRV to KC_VOLD
+const key_override_t prev_volu = ko_make_with_layers_and_negmods(
     MOD_MASK_SHIFT,
-    KC_MNXT,
+    KC_MPRV,
     KC_VOLU,
     ~0,
     MOD_MASK_CAG
 );
 
-// define all key overrides
+// set all key overrides
 const key_override_t **key_overrides = (const key_override_t *[]) {
-    &kc_mute_override,
-    &kc_vold_override,
-    &kc_volu_override,
+    &play_mute,
+    &next_vold,
+    &prev_volu,
     NULL
 };
 
-// remove first row on each layer and it's literally the planck keymap
+// i sometimes think i have too many layers
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [CRINGE] = LAYOUT_preonic_grid(
+    [_QWERTY] = LAYOUT_preonic_grid(
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MPLY,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
-        KC_DEL,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+        KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LALT, KC_LGUI, KC_ESC,  EK_LEFT, KC_SPC,  KC_SPC,  EK_RGHT, KC_ENT,  KC_RGUI, KC_RALT, KC_RCTL
+        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  EK_DMH,  EK_GAME, EK_HOME
     ),
-    [BASED] = LAYOUT_preonic_grid(
+    [_DMH] = LAYOUT_preonic_grid(
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MPLY,
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
-        KC_DEL,  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,    KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
+        KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,    KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LALT, KC_LGUI, KC_ESC,  EK_LEFT, KC_SPC,  KC_SPC,  EK_RGHT, KC_ENT,  KC_RGUI, KC_RALT, KC_RCTL
+        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  EK_DMH,  EK_GAME, EK_HOME
     ),
-    [SYMBOL] = LAYOUT_preonic_grid(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_PIPE,
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSLS,
-        _______, KC_MPRV, KC_MNXT, KC_UNDS, KC_MINS, KC_PLUS, KC_EQL,  KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    [_GAMING] = LAYOUT_preonic_grid(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, KC_SPC,  _______, _______, _______, _______, _______, _______, _______
     ),
-    [FUNCTION] = LAYOUT_preonic_grid(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        NK_ON,   XXXXXXX, KC_HOME, KC_UP,   KC_END,  XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_INS,
-        GUI_ON,  XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGUP, XXXXXXX, KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_PAUS,
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGDN, XXXXXXX, KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    [_SYMBOL] = LAYOUT_preonic_grid(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+        KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_ENT,
+        _______, KC_BSLS, KC_PIPE, KC_UNDS, KC_MINS, KC_PLUS, KC_EQL,  KC_LBRC, KC_RBRC, KC_LCBR, KC_RCBR, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
     ),
-    [RAT] = LAYOUT_preonic_grid(
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
-        NK_OFF,  XXXXXXX, XXXXXXX, KC_MS_U, XXXXXXX, XXXXXXX, QK_BOOT, XXXXXXX, KC_WH_U, KC_BTN3, XXXXXXX, KC_CALC,
-        GUI_OFF, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX, EK_YES,  KC_BTN1, KC_WH_D, KC_BTN2, KC_ACL0, KC_PSCR,
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, EK_CRY,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    [_NAVI] = LAYOUT_preonic_grid(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+        KC_INS,  KC_HOME, KC_UP,   KC_END,  KC_PGUP, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_DEL,
+        KC_PAUS, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX, XXXXXXX, KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_ENT,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
+    ),
+    [_RAT] = LAYOUT_preonic_grid(
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,
+        NK_OFF,  KC_HOME, KC_MS_U, KC_END,  KC_PGUP, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_U, KC_BTN3, XXXXXXX, KC_CALC,
+        NK_ON,   KC_MS_L, KC_MS_D, KC_MS_R, KC_PGDN, XXXXXXX, KC_MPRV, KC_BTN1, KC_WH_D, KC_BTN2, KC_ACL0, KC_PSCR,
+        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MNXT, KC_MPLY, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
     )
 };
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-    return update_tri_layer_state(state, SYMBOL, FUNCTION, RAT);
+    return update_tri_layer_state(state, _SYMBOL, _NAVI, _RAT);
 }
