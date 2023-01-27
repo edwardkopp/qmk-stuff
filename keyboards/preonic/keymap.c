@@ -21,7 +21,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 enum rainbow_layer_cake {
     _QWERTY,
     _DMH,
-    _GAMING,
     _SYMBOL,
     _NAVI,
     _RAT
@@ -30,7 +29,6 @@ enum rainbow_layer_cake {
 // layer keys
 #define EK_SYMB MO(_SYMBOL)
 #define EK_NAVI MO(_NAVI)
-#define EK_GAME TO(_GAMING)
 #define EK_HOME TO(0)
 #define EK_SMH DF(_QWERTY)
 #define EK_DMH DF(_DMH)
@@ -77,21 +75,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  EK_DMH,  EK_GAME, EK_HOME
+        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  EK_DMH,  XXXXXXX, XXXXXXX
     ),
     [_DMH] = LAYOUT_preonic_grid(
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MPLY,
         KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
         KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,    KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  EK_DMH,  EK_GAME, EK_HOME
-    ),
-    [_GAMING] = LAYOUT_preonic_grid(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, _______, _______, _______, KC_SPC,  _______, _______, _______, _______, _______, _______, _______
+        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  EK_DMH,  XXXXXXX, XXXXXXX
     ),
     [_SYMBOL] = LAYOUT_preonic_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
