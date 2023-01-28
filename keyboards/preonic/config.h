@@ -17,11 +17,12 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 #pragma once
 
-// gamer
+// gamer keyboard
 #define USB_POLLING_INTERVAL_MS 1
 #define QMK_KEYS_PER_SCAN 12
 #define FORCE_NKRO
 
-// better mouse
+// gamer mouse
 #define MK_KINETIC_SPEED
-
+#define MOUSEKEY_INTERVAL 1
+#define MOUSEKEY_INITIAL_SPEED 20
