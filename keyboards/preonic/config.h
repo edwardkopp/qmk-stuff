@@ -22,7 +22,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #define QMK_KEYS_PER_SCAN 12
 #define FORCE_NKRO
 
-// gamer mouse
+// smooth mouse
 #define MK_KINETIC_SPEED
-#define MOUSEKEY_INTERVAL 1
-#define MOUSEKEY_INITIAL_SPEED 20
+#define MOUSEKEY_INTERVAL 8
