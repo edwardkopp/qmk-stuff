@@ -20,7 +20,6 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 // keyboard layers
 enum rainbow_layer_cake {
     _QWERTY,
-    _DMH,
     _SYMBOL,
     _NAVI,
     _RAT
@@ -29,9 +28,6 @@ enum rainbow_layer_cake {
 // layer keys
 #define EK_SYMB MO(_SYMBOL)
 #define EK_NAVI MO(_NAVI)
-#define EK_HOME TO(0)
-#define EK_SMH DF(_QWERTY)
-#define EK_DMH DF(_DMH)
 
 // KC_MPLY to KC_MUTE
 const key_override_t play_mute = ko_make_with_layers_and_negmods(
@@ -75,35 +71,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
         KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, XXXXXXX, EK_DMH,  XXXXXXX, XXXXXXX
-    ),
-    [_DMH] = LAYOUT_preonic_grid(
-        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MPLY,
-        KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,    KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC,
-        KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_G,    KC_M,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,    KC_K,    KC_H,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, EK_SMH,  XXXXXXX, XXXXXXX, XXXXXXX
+        KC_LCTL, KC_LGUI, KC_LALT, KC_LSFT, EK_SYMB, KC_SPC,  KC_SPC,  EK_NAVI, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
     ),
     [_SYMBOL] = LAYOUT_preonic_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
         KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC, KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_ENT,
         _______, KC_BSLS, KC_PIPE, KC_PLUS, KC_EQL,  KC_UNDS, KC_MINS, KC_LBRC, KC_LCBR, KC_RCBR, KC_RBRC, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_NAVI] = LAYOUT_preonic_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
         KC_INS,  KC_HOME, KC_UP,   KC_END,  KC_PGUP, XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_DEL,
         KC_PAUS, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, XXXXXXX, KC_CAPS, KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_ENT,
         _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_RAT] = LAYOUT_preonic_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,
         NK_OFF,  KC_HOME, KC_MS_U, KC_END,  KC_PGUP, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_U, KC_BTN3, XXXXXXX, KC_CALC,
         NK_ON,   KC_MS_L, KC_MS_D, KC_MS_R, KC_PGDN, XXXXXXX, KC_MPRV, KC_BTN1, KC_WH_D, KC_BTN2, KC_ACL0, KC_PSCR,
         _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_MNXT, KC_MPLY, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT, KC_RALT, KC_RGUI, KC_RCTL
+        _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, _______, _______, _______, _______, _______
     )
 };
 
