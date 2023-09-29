@@ -21,8 +21,8 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 enum rainbow_layer_cake {
     _QWERTY,
     _SYMBOL,
-    _FUN,
     _NAV,
+    _FUN,
     _RAT
 };
 
@@ -64,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_RAT] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_U, KC_PSCR, KC_BTN3, KC_PGUP, KC_HOME, KC_MS_U, KC_END,  KC_PGUP, KC_DEL,
-        KC_ESC,  KC_LSFT, KC_ALC0, KC_WH_D, KC_BTN1, KC_BTN2, KC_PGDN, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGDN, KC_ENT,
+        KC_ESC,  KC_LSFT, KC_ACL0, KC_WH_D, KC_BTN1, KC_BTN2, KC_PGDN, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGDN, KC_ENT,
         _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_BTN2, KC_BTN3, XXXXXXX, XXXXXXX, EK_RAT,
         _______, _______, _______, _______, XXXXXXX, KC_BTN1, KC_BTN1, XXXXXXX, _______, _______, _______, _______
     )
