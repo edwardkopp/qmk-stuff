@@ -15,31 +15,105 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <https://www.gnu.org/licenses/>.
 */
 
+
 #include QMK_KEYBOARD_H
 
-// the layers
-enum rainbow_layer_cake {
+
+// The layers
+enum rainbow_layer_cake
+{
     _QWERTY,
+    _GAME,
     _SYMBOL,
     _NAV,
-    _FUN,
-    _RAT
+    _RAT,
+    _RMOD,
+    _LMOD
 };
 
-// the layer keys
-enum rainbow_layer_cake_explorer {
-    EK_LEFT = SAFE_RANGE,
-    EK_RGHT
+
+// Keycodes for exploration of the rainbow layer cake
+#define EK_SYM MO(_SYMBOL)
+#define EK_NAV MO(_NAV)
+#define EK_LMOD MO(_LMOD)
+#define EK_RMOD MO(_RMOD)
+
+
+// Keycodes requiring code implementation for basic functionality
+enum rainbow_sprinkles
+{
+    EK_GAME = SAFE_RANGE,
+    EK_GOFF
 };
 
-// the keymap
+
+// Special keycodes associated with the left side modifier
+#define EK_LCTL KC_LCTL
+#define EK_LGUI KC_LGUI
+#define EK_LALT KC_LALT
+
+
+// Special keycodes associated with the right side modifier
+#define EK_RCTL KC_RCTL
+#define EK_RGUI KC_RGUI
+#define EK_RALT KC_RALT
+
+
+// Special keycodes to be associated with modifier layers
+#define EK_CS S(KC_LCTL)
+#define EK_GS S(KC_LGUI)
+#define EK_AS S(KC_LALT)
+#define EK_CG C(KC_LGUI)
+#define EK_CA C(KC_LALT)
+#define EK_GA A(KC_LGUI)
+#define EK_CGS C(S(KC_LGUI))
+#define EK_CAS C(A(KC_LSFT))
+#define EK_GAS A(S(KC_LGUI))
+#define EK_CGA C(A(KC_LGUI))
+#define EK_CAPS KC_CAPS
+#define EK_XXXX XXXXXXX
+#define EK_____ _______
+
+
+// Tuple for referencing these special modifiers
+const uint16_t specialModifiers[] = {
+    EK_LCTL,
+    EK_LGUI,
+    EK_LALT,
+    EK_RCTL,
+    EK_RGUI,
+    EK_RALT,
+    EK_CS,
+    EK_GS,
+    EK_AS,
+    EK_CG,
+    EK_CA,
+    EK_GA,
+    EK_CGS,
+    EK_CAS,
+    EK_GAS,
+    EK_CGA,
+    EK_CAPS,
+    EK_XXXX,
+    EK_____
+};
+
+
+// The keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_preonic_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,
         KC_ESC,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-        KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
-        KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, EK_LEFT, KC_SPC,  KC_SPC,  EK_RGHT, XXXXXXX, KC_RALT, KC_RGUI, KC_RCTL
+        EK_LMOD, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, EK_RMOD,
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, EK_SYM,  KC_SPC,  KC_SPC,  EK_NAV,  XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+    ),
+    [_GAME] = LAYOUT_preonic_grid(
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT,
+        KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, _______, _______, _______, _______, XXXXXXX, KC_RALT, KC_RGUI, KC_RCTL
     ),
     [_SYMBOL] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -50,53 +124,142 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_NAV] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        KC_INS,  XXXXXXX, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX, KC_HOME, KC_UP,   KC_END,  KC_PGUP, KC_DEL,
-        KC_ESC,  KC_LSFT, KC_LALT, KC_LGUI, KC_LCTL, XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN, KC_ENT,
-        _______, XXXXXXX, KC_VOLD, KC_MUTE, KC_VOLU, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
-    ),
-    [_FUN] = LAYOUT_preonic_grid(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        QK_BOOT, KC_F13,  KC_F14,  KC_F15,  KC_F16,  XXXXXXX, XXXXXXX, KC_F1,   KC_F2,   KC_F3,   KC_F4,   XXXXXXX,
-        KC_PAUS, KC_LSFT, KC_LALT, KC_LGUI, KC_LCTL, XXXXXXX, XXXXXXX, KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_CAPS,
-        _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F9,   KC_F10,  KC_F11,  KC_F12,  _______,
+        KC_INS,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   XXXXXXX, XXXXXXX, KC_HOME, KC_UP,   KC_END,  KC_MPRV, KC_DEL,
+        KC_PAUS, KC_F5,   KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_MPLY, KC_ENT,
+        _______, KC_F9,   KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PGUP, XXXXXXX, KC_PGDN, KC_MNXT, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_RAT] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        QK_BOOT, XXXXXXX, XXXXXXX, KC_WH_U, KC_PSCR, XXXXXXX, XXXXXXX, KC_HOME, KC_MS_U, KC_END,  KC_PGUP, KC_DEL,
-        KC_ESC,  KC_LSFT, KC_ACL0, KC_WH_D, KC_BTN1, XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_PGDN, KC_ENT,
-        _______, XXXXXXX, XXXXXXX, KC_BTN3, KC_BTN2, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
+        QK_BOOT, EK_GAME, XXXXXXX, KC_WH_U, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_MS_U, KC_END,  KC_VOLU, KC_DEL,
+        KC_PSCR, EK_GOFF, KC_ACL0, KC_WH_D, KC_BTN1, XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_MUTE, KC_ENT,
+        _______, XXXXXXX, XXXXXXX, KC_BTN3, KC_BTN2, XXXXXXX, XXXXXXX, KC_PGUP, XXXXXXX, KC_PGDN, KC_VOLD, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
+    ),
+    [_RMOD] = LAYOUT_preonic_grid(
+        _______, _______, _______, _______, _______, _______, EK_____, EK_____, EK_____, EK_____, EK_____, EK_____,
+        _______, _______, _______, _______, _______, _______, EK_CGS,  EK_CS,   EK_GS,   EK_AS,   EK_____, EK_____,
+        _______, _______, _______, _______, _______, _______, EK_CAS,  EK_RCTL, EK_RGUI, EK_RALT, EK_CGA,  EK_____,
+        EK_CAPS, _______, _______, _______, _______, _______, EK_GAS,  EK_CG,   EK_CA,   EK_GA,   EK_____, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, EK_XXXX, EK_XXXX, EK_XXXX, EK_XXXX
+    ),
+    [_LMOD] = LAYOUT_preonic_grid(
+        EK_____, EK_____, EK_____, EK_____, EK_____, EK_____, _______, _______, _______, _______, _______, _______,
+        EK_____, EK_____, EK_AS,   EK_GS,   EK_CS,   EK_CGS,  _______, _______, _______, _______, _______, _______,
+        EK_____, EK_CGA,  EK_LALT, EK_LGUI, EK_LCTL, EK_CAS,  _______, _______, _______, _______, _______, _______,
+        _______, EK_____, EK_GA,   EK_CA,   EK_CG,   EK_GAS,  _______, _______, _______, _______, _______, EK_CAPS,
+        EK_XXXX, EK_XXXX, EK_XXXX, EK_XXXX, _______, _______, _______, _______, _______, _______, _______, _______
     )
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case EK_LEFT:
-            if (record->event.pressed) {
-                layer_on(_SYMBOL);
-                if (IS_LAYER_ON(_NAV)) {
-                    layer_on(_RAT);
-                }
-            } else {
-                layer_off(_SYMBOL);
-                layer_off(_FUN);
-                layer_off(_RAT);
+
+// Tracking for _LMOD and _RMOD
+bool isLmodFresh = false;
+bool isRmodFresh = false;
+
+
+// Checks if a given keycode is on the modifier layers
+bool isModifierLayerKey(uint16_t keycode)
+{
+    size_t count = sizeof(specialModifiers) / sizeof(specialModifiers[0]);
+    for (size_t i = 0; i < count; i++)
+    {
+        if (specialModifiers[i] == keycode)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// The magic (for the mod layers only)
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+    // Handle keys on the special modifier layers
+    if (isModifierLayerKey(keycode) && record->event.pressed)
+    {
+        if (IS_LAYER_ON(_LMOD) && isLmodFresh)
+        {
+            isLmodFresh = false;
+        }
+        else if (IS_LAYER_ON(_RMOD) && isRmodFresh)
+        {
+            isRmodFresh = false;
+        }
+        return true;
+    }
+    // Handle layer activation keys with code implementations
+    switch (keycode)
+    {
+        case EK_LMOD:
+            if (record->event.pressed)
+            {
+                isLmodFresh = true;
+            }
+            else if (IS_LAYER_OFF(_LMOD))
+            {
+                unregister_code(KC_LSFT);
+                return false;
+            }
+            else
+            {
+                isLmodFresh = false;
+            }
+            return true;
+            break;
+        case EK_RMOD:
+            if (record->event.pressed)
+            {
+                isRmodFresh = true;
+            }
+            else if (IS_LAYER_OFF(_RMOD))
+            {
+                unregister_code(KC_RSFT);
+                return false;
+            }
+            else
+            {
+                isRmodFresh = false;
+            }
+            return true;
+            break;
+        case EK_GAME:
+            if (record->event.pressed)
+            {
+                layer_on(_GAME);
             }
             break;
-        case EK_RGHT:
-            if (record->event.pressed) {
-                layer_on(_NAV);
-                if (IS_LAYER_ON(_SYMBOL)) {
-                    layer_on(_FUN);
-                }
-            } else {
-                layer_off(_NAV);
-                layer_off(_FUN);
-                layer_off(_RAT);
+        case EK_GOFF:
+            if (record->event.pressed)
+            {
+                layer_off(_GAME);
             }
             break;
     }
+    // If keycode processing makes it this far, it has nothing to do with the modifier layers
+    if (!record->event.pressed)
+    {
+        return true;
+    }
+    if (isLmodFresh)
+    {
+        layer_off(_LMOD);
+        register_code(KC_LSFT);
+        isLmodFresh = false;
+    }
+    if (isRmodFresh)
+    {
+        layer_off(_RMOD);
+        register_code(KC_RSFT);
+        isRmodFresh = false;
+    }
     return true;
+}
+
+
+// Make _RAT layer accessible
+layer_state_t layer_state_set_user(layer_state_t state)
+{
+    return update_tri_layer_state(state, _SYMBOL, _NAV, _RAT);
 }
