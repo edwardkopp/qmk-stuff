@@ -97,6 +97,10 @@ const uint16_t specialModifiers[] = {
 };
 
 
+// Calculate the keycode count of the tuple
+size_t specialModifiersCount = sizeof(specialModifiers) / sizeof(specialModifiers[0]);
+
+
 // The keymap
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_preonic_grid(
@@ -159,8 +163,7 @@ bool isRmodFresh = false;
 // Checks if a given keycode is on the modifier layers
 bool isModifierLayerKey(uint16_t keycode)
 {
-    size_t count = sizeof(specialModifiers) / sizeof(specialModifiers[0]);
-    for (size_t i = 0; i < count; i++)
+    for (size_t i = 0; i < specialModifiersCount; i++)
     {
         if (specialModifiers[i] == keycode)
         {
