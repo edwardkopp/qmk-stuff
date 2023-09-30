@@ -171,7 +171,7 @@ bool isModifierLayerKey(uint16_t keycode)
 }
 
 
-// The magic (for the mod layers only)
+// Some real magic
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
     // Handle keys on the special modifier layers
