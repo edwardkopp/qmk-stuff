@@ -236,7 +236,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
             break;
     }
     // If keycode processing makes it this far, it has nothing to do with the modifier layers
-    if (!record->event.pressed)
+    if (!record->event.pressed || keycode == EK_SYM || keycode == EK_NAV)
     {
         return true;
     }
