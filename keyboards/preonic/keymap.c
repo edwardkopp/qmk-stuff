@@ -70,7 +70,6 @@ enum rainbow_sprinkles
 #define EK_CAS C(A(KC_LSFT))
 #define EK_GAS A(S(KC_LGUI))
 #define EK_CGA C(A(KC_LGUI))
-#define EK_CAPS KC_CAPS
 #define EK_XXXX XXXXXXX
 #define EK_____ _______
 
@@ -93,7 +92,6 @@ const uint16_t specialModifiers[] = {
     EK_CAS,
     EK_GAS,
     EK_CGA,
-    EK_CAPS,
     EK_XXXX,
     EK_____
 };
@@ -125,14 +123,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAV] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         KC_INS,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   XXXXXXX, XXXXXXX, KC_HOME, KC_UP,   KC_END,  KC_MPRV, KC_DEL,
-        KC_PAUS, KC_F5,   KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_MPLY, KC_ENT,
+        KC_CAPS, KC_F5,   KC_F6,   KC_F7,   KC_F8,   XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, KC_MPLY, KC_ENT,
         _______, KC_F9,   KC_F10,  KC_F11,  KC_F12,  XXXXXXX, XXXXXXX, KC_PGUP, XXXXXXX, KC_PGDN, KC_MNXT, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_RAT] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        QK_BOOT, EK_GAME, XXXXXXX, KC_WH_U, XXXXXXX, XXXXXXX, XXXXXXX, KC_HOME, KC_MS_U, KC_END,  KC_VOLU, KC_DEL,
-        KC_PSCR, EK_GOFF, KC_ACL0, KC_WH_D, KC_BTN1, XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_MUTE, KC_ENT,
+        QK_BOOT, EK_GAME, XXXXXXX, KC_WH_U, KC_PSCR, XXXXXXX, XXXXXXX, KC_HOME, KC_MS_U, KC_END,  KC_VOLU, KC_DEL,
+        KC_PAUS, EK_GOFF, KC_ACL0, KC_WH_D, KC_BTN1, XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_MUTE, KC_ENT,
         _______, XXXXXXX, XXXXXXX, KC_BTN3, KC_BTN2, XXXXXXX, XXXXXXX, KC_PGUP, XXXXXXX, KC_PGDN, KC_VOLD, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
@@ -140,14 +138,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, EK_____, EK_____, EK_____, EK_____, EK_____, EK_____,
         _______, _______, _______, _______, _______, _______, EK_CGS,  EK_CS,   EK_GS,   EK_AS,   EK_____, EK_____,
         _______, _______, _______, _______, _______, _______, EK_CAS,  EK_RCTL, EK_RGUI, EK_RALT, EK_CGA,  EK_____,
-        EK_CAPS, _______, _______, _______, _______, _______, EK_GAS,  EK_CG,   EK_CA,   EK_GA,   EK_____, _______,
+        XXXXXXX, _______, _______, _______, _______, _______, EK_GAS,  EK_CG,   EK_CA,   EK_GA,   EK_____, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, EK_XXXX, EK_XXXX, EK_XXXX, EK_XXXX
     ),
     [_LMOD] = LAYOUT_preonic_grid(
         EK_____, EK_____, EK_____, EK_____, EK_____, EK_____, _______, _______, _______, _______, _______, _______,
         EK_____, EK_____, EK_AS,   EK_GS,   EK_CS,   EK_CGS,  _______, _______, _______, _______, _______, _______,
         EK_____, EK_CGA,  EK_LALT, EK_LGUI, EK_LCTL, EK_CAS,  _______, _______, _______, _______, _______, _______,
-        _______, EK_____, EK_GA,   EK_CA,   EK_CG,   EK_GAS,  _______, _______, _______, _______, _______, EK_CAPS,
+        _______, EK_____, EK_GA,   EK_CA,   EK_CG,   EK_GAS,  _______, _______, _______, _______, _______, XXXXXXX,
         EK_XXXX, EK_XXXX, EK_XXXX, EK_XXXX, _______, _______, _______, _______, _______, _______, _______, _______
     )
 };
