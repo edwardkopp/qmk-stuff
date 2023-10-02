@@ -182,10 +182,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     {
         if (IS_LAYER_ON(_LMOD) && isLmodFresh)
         {
+            unregister_code(KC_LSFT);
             isLmodFresh = false;
         }
         else if (IS_LAYER_ON(_RMOD) && isRmodFresh)
         {
+            unregister_code(KC_RSFT);
             isRmodFresh = false;
         }
         return true;
@@ -196,33 +198,29 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         case EK_LMOD:
             if (record->event.pressed)
             {
+                register_code(KC_LSFT);
                 isLmodFresh = true;
+                return true;
             }
-            else if (IS_LAYER_OFF(_LMOD))
+            if (isLmodFresh || IS_LAYER_OFF(_LMOD))
             {
                 unregister_code(KC_LSFT);
-                return false;
             }
-            else
-            {
-                isLmodFresh = false;
-            }
+            isLmodFresh = false;
             return true;
             break;
         case EK_RMOD:
             if (record->event.pressed)
             {
+                register_code(KC_RSFT);
                 isRmodFresh = true;
+                return true;
             }
-            else if (IS_LAYER_OFF(_RMOD))
+            if (isRmodFresh || IS_LAYER_OFF(_RMOD))
             {
                 unregister_code(KC_RSFT);
-                return false;
             }
-            else
-            {
-                isRmodFresh = false;
-            }
+            isRmodFresh = false;
             return true;
             break;
         case EK_GAME:
@@ -246,13 +244,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
     if (isLmodFresh)
     {
         layer_off(_LMOD);
-        register_code(KC_LSFT);
         isLmodFresh = false;
     }
     if (isRmodFresh)
     {
         layer_off(_RMOD);
-        register_code(KC_RSFT);
         isRmodFresh = false;
     }
     return true;
