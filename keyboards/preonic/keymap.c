@@ -55,7 +55,6 @@ enum rainbow_sprinkles
 
 // Special keycodes associated with the right side modifier
 #define EK_RCTL KC_RCTL
-#define EK_RGUI KC_RGUI
 #define EK_RALT KC_RALT
 
 
@@ -80,7 +79,6 @@ const uint16_t specialModifiers[] = {
     EK_LGUI,
     EK_LALT,
     EK_RCTL,
-    EK_RGUI,
     EK_RALT,
     EK_CS,
     EK_GS,
@@ -141,7 +139,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_RMOD] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, EK_____, EK_____, EK_____, EK_____, EK_____, EK_____,
         _______, _______, _______, _______, _______, _______, EK_CGS,  EK_CS,   EK_GS,   EK_AS,   EK_____, EK_____,
-        _______, _______, _______, _______, _______, _______, EK_CAS,  EK_RCTL, EK_RGUI, EK_RALT, EK_CGA,  EK_____,
+        _______, _______, _______, _______, _______, _______, EK_CAS,  EK_RCTL, EK_LGUI, EK_RALT, EK_CGA,  EK_____,
         XXXXXXX, _______, _______, _______, _______, _______, EK_GAS,  EK_CG,   EK_CA,   EK_GA,   EK_____, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, EK_XXXX, EK_XXXX, EK_XXXX, EK_XXXX
     ),
