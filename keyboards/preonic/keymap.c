@@ -153,11 +153,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 
-// Tracking for _LMOD and _RMOD
-bool isLmodFresh = false;
-bool isRmodFresh = false;
-
-
 // Checks if a given keycode is on the modifier layers
 bool isModifierLayerKey(uint16_t keycode)
 {
@@ -172,82 +167,79 @@ bool isModifierLayerKey(uint16_t keycode)
 }
 
 
+// Tracking for modifier layers
+bool isModFresh = false;
+
+
+// Handles additional functionality for modifier layer activation keys
+bool ShiftModifierLayerKey(uint16_t shiftKeycode, uint16_t modifierLayer, bool pressed)
+{
+    if (pressed)
+    {
+        register_code(shiftKeycode);
+        isModFresh = true;
+        return true;
+    }
+    if (isModFresh || IS_LAYER_OFF(modifierLayer))
+    {
+        unregister_code(shiftKeycode);
+    }
+    isModFresh = false;
+    return true;
+}
+
+
 // Some real magic
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
+    bool pressed = record->event.pressed;
     // Handle keys on the special modifier layers
-    if (isModifierLayerKey(keycode) && record->event.pressed)
+    if (isModifierLayerKey(keycode) && pressed)
     {
-        if (IS_LAYER_ON(_LMOD) && isLmodFresh)
+        if (!isModFresh)
+        {
+            return true;
+        }
+        if (IS_LAYER_ON(_LMOD))
         {
             unregister_code(KC_LSFT);
-            isLmodFresh = false;
         }
-        else if (IS_LAYER_ON(_RMOD) && isRmodFresh)
+        else if (IS_LAYER_ON(_RMOD))
         {
             unregister_code(KC_RSFT);
-            isRmodFresh = false;
         }
+        isModFresh = false;
         return true;
     }
-    // Handle layer activation keys with code implementations
+    // Handle layer activation keys
     switch (keycode)
     {
         case EK_LMOD:
-            if (record->event.pressed)
-            {
-                register_code(KC_LSFT);
-                isLmodFresh = true;
-                return true;
-            }
-            if (isLmodFresh || IS_LAYER_OFF(_LMOD))
-            {
-                unregister_code(KC_LSFT);
-            }
-            isLmodFresh = false;
-            return true;
-            break;
+            return ShiftModifierLayerKey(KC_LSFT, _LMOD, pressed);
         case EK_RMOD:
-            if (record->event.pressed)
-            {
-                register_code(KC_RSFT);
-                isRmodFresh = true;
-                return true;
-            }
-            if (isRmodFresh || IS_LAYER_OFF(_RMOD))
-            {
-                unregister_code(KC_RSFT);
-            }
-            isRmodFresh = false;
+            return ShiftModifierLayerKey(KC_RSFT, _RMOD, pressed);
+        case EK_SYM:
+        case EK_NAV:
             return true;
-            break;
         case EK_GAME:
-            if (record->event.pressed)
+            if (pressed)
             {
                 layer_on(_GAME);
             }
             break;
         case EK_GOFF:
-            if (record->event.pressed)
+            if (pressed)
             {
                 layer_off(_GAME);
             }
             break;
     }
-    // If keycode processing makes it this far, it has nothing to do with the modifier layers
-    if (!record->event.pressed || keycode == EK_SYM || keycode == EK_NAV)
-    {
-        return true;
-    }
-    if (isLmodFresh)
+    // At this point, the keycode isn't on the modifier layer
+    if (isModFresh && pressed)
     {
         layer_off(_LMOD);
-        isLmodFresh = false;
-    }
-    if (isRmodFresh)
-    {
         layer_off(_RMOD);
-        isRmodFresh = false;
+        isModFresh = false;
     }
     return true;
 }
