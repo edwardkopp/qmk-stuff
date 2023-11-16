@@ -56,7 +56,7 @@ class KeyboardsJson:
         return self._data[label][self._KEYBOARD_KEY], self._data[label][self._KEYMAP_KEY]
 
 
-class Keyboards(KeyboardsJson):
+class KeyboardsBank(KeyboardsJson):
 
     _DERIVATIVE_JSON = "derivative.json"
     _QMK_KEYBOARD_DIR = "keyboards"
@@ -68,63 +68,75 @@ class Keyboards(KeyboardsJson):
         if not isdir(self._QMK_PATH):
             raise NotADirectoryError("QMK firmware directory is missing.")
         KeyboardsJson.__init__(self)
+        self._selected_label: str | None = None
 
-    def deploy_keymap(self, label: str) -> None:
+    def select_label(self, label: str) -> None:
+        """
+        Accepts string label of registered keyboard and prepares it for use.
+
+        :param label: string label of registered keyboard
+        """
+        lowercase_label = label.lower()
+        if lowercase_label not in self.list:
+            self._selected_label = None
+            raise KeyError("Keymap with given label does not exist.")
+        self._selected_label = lowercase_label
+
+    def _require_select_label(self) -> None:
+        """
+        To be placed in public methods where a keyboard selection is required.
+
+        :raise TypeError: if selected label is not registered
+        """
+        if self._selected_label is None:
+            raise TypeError("A label must be selected before calling.")
+
+    def deploy_keymap(self) -> None:
         """
         Place files of a registered keymap into the QMK directory
         for firmware compilation.
 
-        :param label: label of registered keymap to deploy
-        :raise KeyError: if specified keymap name is not registered
         :raise NotADirectoryError: if keymap files are not internally available
         """
-        label = self._label_check(label)
-        source_dir = join(self._DIR, label)
-        destination_dir = self._locate_qmk_keymap_dir(label, check_keymap=False)
+        self._require_select_label()
+        source_dir = join(self._DIR, self._selected_label)
+        destination_dir = self._locate_qmk_keymap_dir(check_keymap=False)
         rmtree(destination_dir, True)
         copytree(source_dir, destination_dir)
 
-    def update_keymap(self, label: str) -> None:
+    def update_keymap(self) -> None:
         """
         Read from the QMK directory and update registered keymap files
         for the registered keymap with the associated given label.
 
-        :param label: label of registered keymap to update
         :raise KeyError: if specified keymap name is not registered
         :raise NotADirectoryError: if keymap is not found in the QMK directory
         """
-        label = self._label_check(label)
-        source_dir = self._locate_qmk_keymap_dir(label, check_keymap=True)
-        destination_dir = join(self._DIR, label)
+        self._require_select_label()
+        source_dir = self._locate_qmk_keymap_dir(check_keymap=True)
+        destination_dir = join(self._DIR, self._selected_label)
         rmtree(destination_dir, True)
         copytree(source_dir, destination_dir)
 
-    def compile_command(self, label: str) -> str:
+    def compile_command(self) -> str:
         """
         Get compile command for a registered keymap.
 
-        :param label: label of registered keymap to get command for
         :return: string for QMK compile command
         """
-        return "qmk compile -kb {} -km {}".format(*self.get_data(label))
+        self._require_select_label()
+        return "qmk compile -kb {} -km {}".format(*self.get_data(self._selected_label))
 
-    def _label_check(self, label: str) -> str:
-        label = label.lower()
-        if label not in self.list:
-            raise KeyError("Keymap with given label does not exist.")
-        return label
-
-    def _locate_qmk_keymap_dir(self, label: str, check_keymap: bool) -> str:
+    def _locate_qmk_keymap_dir(self, check_keymap: bool) -> str:
         """
         Confirm presence of keymap directories within QMK directory
         and return full path of keymap registered under given name.
 
-        :param label: keymap label as registered
         :param check_keymap: require registered keymap to already exist in QMK directory
         :return: path to QMK keymap directory
         :raise NotADirectoryError: if keymap directory check fails
         """
-        keyboard, keymap = self.get_data(label)
+        keyboard, keymap = self.get_data(self._selected_label)
         path_list_extension = [self._QMK_KEYMAP_DIR]
         minimum_path_len = 2
         if check_keymap:
@@ -145,7 +157,7 @@ class Cli:
     def __init__(self):
         self._loop_active = True
         try:
-            self._internal = Keyboards()
+            self._internal = KeyboardsBank()
         except NotADirectoryError:
             print("QMK firmware directory is missing from the user's home directory.")
             print("Use QMK MSYS/CLI to run the \"qmk setup\" command before running this program.")
@@ -203,16 +215,18 @@ class Cli:
 
     def _registered_action(self, label: str, deploying: bool = False) -> None:
         try:
-            if deploying:
-                self._internal.deploy_keymap(label)
-                print("Run \"{}\" in QMK CLI/MSYS to compile the keymap.".format(self._internal.compile_command(label)))
-            else:
-                self._internal.update_keymap(label)
-                print("Keymap internally updated.")
+            self._internal.select_label(label)
         except KeyError:
             print("Invalid \"label\" parameter. Try again.")
+            return
+        if deploying:
+            self._internal.deploy_keymap()
+            print("Run \"{}\" in QMK CLI/MSYS to compile the keymap.".format(self._internal.compile_command()))
+            return
+        try:
+            self._internal.update_keymap()
+            print("Keymap internally updated.")
         except NotADirectoryError:
-            # Only can occur when deploying == False
             print("Missing keymap within QMK directory to update from.")
 
 
