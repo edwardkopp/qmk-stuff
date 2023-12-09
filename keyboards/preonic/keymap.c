@@ -107,8 +107,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, _______, _______, _______, _______, _______, _______, _______, _______
+        KC_LSFT, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_RSFT,
+        KC_LCTL, KC_LGUI, KC_LALT, XXXXXXX, _______, _______, _______, _______, XXXXXXX, KC_RALT, KC_RGUI, KC_RCTL
     ),
     [_SYMBOL] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
@@ -164,7 +164,6 @@ bool isModifierLayerKey(uint16_t keycode)
 
 // Tracking for modifier layers
 bool isModFresh = false;
-bool isGameLayerActive = false;
 
 
 // Handles additional functionality for modifier layer activation keys
@@ -174,16 +173,11 @@ bool ShiftModifierLayerKey(uint16_t shiftKeycode, uint16_t modifierLayer, bool p
     {
         register_code(shiftKeycode);
         isModFresh = true;
-        layer_off(_GAME);
         return true;
     }
     if (isModFresh || IS_LAYER_OFF(modifierLayer))
     {
         unregister_code(shiftKeycode);
-    }
-    if (isGameLayerActive)
-    {
-        layer_on(_GAME);
     }
     isModFresh = false;
     return true;
@@ -200,13 +194,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         case EK_GAME:
             if (pressed)
             {
-                isGameLayerActive = true;
+                layer_on(_GAME);
             }
             break;
         case EK_GOFF:
             if (pressed)
             {
-                isGameLayerActive = false;
+                layer_off(_GAME);
             }
             break;
         case EK_LMOD:
