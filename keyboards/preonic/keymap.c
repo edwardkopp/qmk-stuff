@@ -126,23 +126,23 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_RAT] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-        QK_BOOT, KC_VOLU, XXXXXXX, KC_WH_U, KC_BTN2, XXXXXXX, XXXXXXX, KC_HOME, KC_MS_U, KC_END,  KC_MPRV, KC_DEL,
-        KC_ESC,  KC_MUTE, KC_ACL0, KC_WH_D, KC_BTN1, XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_MPLY, KC_ENT,
-        _______, KC_VOLD, XXXXXXX, KC_BTN3, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGUP, KC_PSCR, KC_PGDN, KC_MNXT, _______,
+        QK_BOOT, XXXXXXX, XXXXXXX, KC_WH_U, KC_BTN2, XXXXXXX, XXXXXXX, KC_HOME, KC_MS_U, KC_END,  KC_VOLU, KC_DEL,
+        EK_GAME, EK_GOFF, KC_ACL0, KC_WH_D, KC_BTN1, XXXXXXX, XXXXXXX, KC_MS_L, KC_MS_D, KC_MS_R, KC_MUTE, KC_ENT,
+        _______, XXXXXXX, XXXXXXX, KC_BTN3, XXXXXXX, XXXXXXX, XXXXXXX, KC_PGUP, KC_PSCR, KC_PGDN, KC_VOLD, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
     [_RMOD] = LAYOUT_preonic_grid(
         _______, _______, _______, _______, _______, _______, EK_____, EK_____, EK_____, EK_____, EK_____, EK_____,
         _______, _______, _______, _______, _______, _______, EK_CGS,  EK_CS,   EK_GS,   EK_AS,   EK_____, EK_____,
         _______, _______, _______, _______, _______, _______, EK_CAS,  EK_RCTL, EK_GUI,  EK_RALT, EK_CGA,  EK_____,
-        EK_GOFF, _______, _______, _______, _______, _______, EK_GAS,  EK_CG,   EK_CA,   EK_GA,   EK_____, _______,
+        XXXXXXX, _______, _______, _______, _______, _______, EK_GAS,  EK_CG,   EK_CA,   EK_GA,   EK_____, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
     ),
     [_LMOD] = LAYOUT_preonic_grid(
         EK_____, EK_____, EK_____, EK_____, EK_____, EK_____, _______, _______, _______, _______, _______, _______,
         EK_____, EK_____, EK_AS,   EK_GS,   EK_CS,   EK_CGS,  _______, _______, _______, _______, _______, _______,
         EK_____, EK_CGA,  EK_LALT, EK_GUI,  EK_LCTL, EK_CAS,  _______, _______, _______, _______, _______, _______,
-        _______, EK_____, EK_GA,   EK_CA,   EK_CG,   EK_GAS,  _______, _______, _______, _______, _______, EK_GAME,
+        _______, EK_____, EK_GA,   EK_CA,   EK_CG,   EK_GAS,  _______, _______, _______, _______, _______, XXXXXXX,
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______, _______, _______, _______, _______, _______, _______, _______
     )
 };
