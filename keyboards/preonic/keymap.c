@@ -228,7 +228,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         {
             unregister_code(KC_LSFT);
         }
-        else if (IS_LAYER_ON(_RMOD))
+        if (IS_LAYER_ON(_RMOD))
         {
             unregister_code(KC_RSFT);
         }
