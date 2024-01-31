@@ -1,6 +1,10 @@
 {
     "preonic": {
         "kb": "preonic/rev3_drop",
-        "km": "edwardkopp"
+        "km": null
+    },
+    "planck": {
+        "kb": "planck/rev7",
+        "km": null
     }
 }

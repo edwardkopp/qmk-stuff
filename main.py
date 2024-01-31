@@ -24,15 +24,23 @@ from json import load
 
 class KeyboardsJson:
 
-    _DIR = "keyboards"
+    ROOT = "keyboards"
 
-    _PATH = join(_DIR, "keyboards.json")
+    _JSON_PATH = join(ROOT, "keyboards.json")
+
+    _COMMON_DIR = "common"
+    COMMON = join(ROOT, _COMMON_DIR)
+
     _KEYBOARD_KEY = "kb"
     _KEYMAP_KEY = "km"
 
+    _EK_USER = "edwardkopp"
+
     def __init__(self):
-        with open(self._PATH, "r") as file:
+        with open(self._JSON_PATH, "r") as file:
             self._data = load(file)
+        if self._COMMON_DIR in self._data:
+            del self._data[self._COMMON_DIR]
 
     @property
     def list(self) -> list[str]:
@@ -43,20 +51,26 @@ class KeyboardsJson:
         """
         return list(self._data.keys())
 
-    def get_data(self, label: str) -> tuple[str, str]:
+    def get_data(self, label: str) -> tuple[str, str, bool]:
         """
         Get tuple of two string values for the keys kb and km associated with the given label,
         indexed respectively.
 
         :param label: registered keymap label to get data for
-        :return: tuple of strings
+        :return: tuple of keyboard value, keymap value, and boolean indicating use of headers files in common directory
         """
-        return self._data[label][self._KEYBOARD_KEY], self._data[label][self._KEYMAP_KEY]
+        keyboard = self._data[label][self._KEYBOARD_KEY]
+        keymap = self._data[label][self._KEYMAP_KEY]
+        use_common = keymap is None
+        keymap = self._EK_USER if use_common else keymap
+        return keyboard, keymap, use_common
+
+    def uses_common(self, label: str) -> bool:
+        return self.get_data(label)[-1]
 
 
 class KeyboardsBank(KeyboardsJson):
 
-    _DERIVATIVE_JSON = "derivative.json"
     _QMK_KEYBOARD_DIR = "keyboards"
     _QMK_KEYMAP_DIR = "keymaps"
     _QMK_DIR = "qmk_firmware"
@@ -97,10 +111,14 @@ class KeyboardsBank(KeyboardsJson):
         :raise NotADirectoryError: if keymap files are not internally available
         """
         self._require_select_label()
-        source_dir = join(self._DIR, self._selected_label)
+        source_dir = join(self.ROOT, self._selected_label)
+        if not isdir(source_dir):
+            raise NotADirectoryError
         destination_dir = self._locate_qmk_keymap_dir(check_keymap=False)
         rmtree(destination_dir, True)
         copytree(source_dir, destination_dir)
+        if self.uses_common(self._selected_label):
+            copytree(self.COMMON, destination_dir, dirs_exist_ok=True)
 
     def update_keymap(self) -> None:
         """
@@ -111,8 +129,10 @@ class KeyboardsBank(KeyboardsJson):
         :raise NotADirectoryError: if keymap is not found in the QMK directory
         """
         self._require_select_label()
+        if self.uses_common(self._selected_label):
+            raise ValueError
         source_dir = self._locate_qmk_keymap_dir(check_keymap=True)
-        destination_dir = join(self._DIR, self._selected_label)
+        destination_dir = join(self.ROOT, self._selected_label)
         rmtree(destination_dir, True)
         copytree(source_dir, destination_dir)
 
@@ -134,7 +154,7 @@ class KeyboardsBank(KeyboardsJson):
         :return: path to QMK keymap directory
         :raise NotADirectoryError: if keymap directory check fails
         """
-        keyboard, keymap = self.get_data(self._selected_label)
+        keyboard, keymap, _ = self.get_data(self._selected_label)
         path_list_extension = [self._QMK_KEYMAP_DIR]
         minimum_path_len = 2
         if check_keymap:
@@ -161,7 +181,7 @@ class Cli:
             print("Use QMK MSYS/CLI to run the \"qmk setup\" command before running this program.")
             print()
             input("Press enter to exit the program... ")
-            raise
+            raise NotADirectoryError
 
     def run(self) -> None:
         print("Use the \"help\" command for a list of available commands.")
@@ -218,14 +238,19 @@ class Cli:
             print("Invalid \"label\" parameter. Try again.")
             return
         if deploying:
-            self._internal.deploy_keymap()
-            print("Run \"{}\" in QMK CLI/MSYS to compile the keymap.".format(self._internal.compile_command()))
+            try:
+                self._internal.deploy_keymap()
+                print("Run \"{}\" in QMK CLI/MSYS to compile the keymap.".format(self._internal.compile_command()))
+            except NotADirectoryError:
+                print("Missing keymap files for deploying.")
             return
         try:
             self._internal.update_keymap()
             print("Keymap internally updated.")
         except NotADirectoryError:
             print("Missing keymap within QMK directory to update from.")
+        except ValueError:
+            print("This keymap does not support updating from the QMK directory.")
 
 
 if __name__ == "__main__":
