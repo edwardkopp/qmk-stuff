@@ -76,11 +76,32 @@ class KeyboardsBank(KeyboardsJson):
     _QMK_DIR = "qmk_firmware"
     _QMK_PATH = join(Path.home(), _QMK_DIR, _QMK_KEYBOARD_DIR)
 
+    _PREONIC_TEXT = "preonic"
+    _PLANCK_TEXT = "planck"
+    _KEYMAP_FILENAME = "keymap.c"
+    _PREONIC_KEYMAP_FILE = join(KeyboardsJson.ROOT, _PREONIC_TEXT, _KEYMAP_FILENAME)
+    _PLANCK_KEYMAP_FILE = join(KeyboardsJson.ROOT, _PLANCK_TEXT, _KEYMAP_FILENAME)
+
     def __init__(self):
         if not isdir(self._QMK_PATH):
             raise NotADirectoryError("QMK firmware directory is missing.")
         KeyboardsJson.__init__(self)
         self._selected_label: str | None = None
+        self._update_planck_from_preonic()
+
+    def _update_planck_from_preonic(self):
+        with open(self._PREONIC_KEYMAP_FILE, "r") as source:
+            source_lines = source.readlines()
+        with open(self._PLANCK_KEYMAP_FILE, "w") as output:
+            skip_line = False
+            for line in source_lines:
+                if skip_line:
+                    skip_line = False
+                    continue
+                if f"LAYOUT_{self._PREONIC_TEXT}_grid(" in line:
+                    line = line.replace(self._PREONIC_TEXT, self._PLANCK_TEXT)
+                    skip_line = True
+                output.writelines(line)
 
     def select_label(self, label: str) -> None:
         """

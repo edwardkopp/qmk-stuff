@@ -20,7 +20,14 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 #include "ortho.h"
 
 
-// The keymap
+/*
+Do not manually edit this file for the Planck; only edit this file for the Preonic.
+
+This file is generated for the Planck by using the Preonic,
+and removing the top row of each layer.
+
+This generation is done every time the Python program starts.
+*/
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_preonic_grid(
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
